@@ -1,4 +1,4 @@
-from src.data import BaseData
+from src.data import BaseData, Indices
 import numpy as np
 
 
@@ -7,7 +7,7 @@ class Data(BaseData):
         self.x = x
         self.y = y
 
-    def get_sample(self, indices):
+    def __getitem__(self, indices: Indices):
         return Data(self.x[indices], self.y[indices])
 
     def __len__(self):

@@ -1,4 +1,4 @@
-from src.data import BaseData
+from src.data import BaseData, Indices
 import numpy as np
 
 
@@ -6,7 +6,7 @@ class Data(BaseData):
     def __init__(self, x: np.ndarray):
         self.x = x
 
-    def get_sample(self, indices):
+    def __getitem__(self, indices: Indices):
         return Data(self.x[indices])
 
     def __len__(self):

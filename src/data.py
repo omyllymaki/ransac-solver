@@ -4,13 +4,14 @@ import numpy as np
 
 Indices = Union[List[int], np.ndarray]
 
+
 class BaseData(ABC):
     """
     Abstract Data class that needs to be implemented by user.
     """
 
     @abstractmethod
-    def get_sample(self, indices: Indices) -> 'BaseData':
+    def __getitem__(self, indices: Indices) -> 'BaseData':
         """
         Get sample points based on indices.
         """
@@ -25,4 +26,4 @@ class BaseData(ABC):
 
     def get_random_sample(self, n_items: int) -> 'BaseData':
         indices = np.random.choice(len(self), n_items, replace=False)
-        return self.get_sample(indices)
+        return self[indices]

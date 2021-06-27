@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.data import BaseData
+from src.data import BaseData, Indices
 
 
 class Data(BaseData):
@@ -9,7 +9,7 @@ class Data(BaseData):
         self.source = source
         self.target = target
 
-    def get_sample(self, indices):
+    def __getitem__(self, indices: Indices):
         return Data(self.source[indices], self.target)
 
     def __len__(self):

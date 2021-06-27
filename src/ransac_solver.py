@@ -67,7 +67,7 @@ class RansacSolver:
 
         # Do final fitting with all the inliers
         logger.debug(f"Fit model with full inlier dataset.")
-        inliers = data.get_sample(final_inlier_indices)
+        inliers = data[final_inlier_indices]
         self.model.fit(inliers)
 
         return final_inlier_indices
