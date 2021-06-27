@@ -46,7 +46,7 @@ def main():
     data = Data(xyz)
     solver = RansacSolver(model=model, error_threshold=1.0, n_sample_points=3, max_trials=200)
     time_start = time.time()
-    inlier_indices = solver.solve(data)
+    inlier_indices = solver.fit(data)
     time_end = time.time()
     print(f"Solution took {time_end - time_start} s")
 

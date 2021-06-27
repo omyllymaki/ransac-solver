@@ -50,7 +50,7 @@ def main():
     data = Data(source, target)
     model = Model()
     solver = RansacSolver(model=model, error_threshold=10, n_sample_points=5, max_trials=200)
-    inlier_indices = solver.solve(data)
+    inlier_indices = solver.fit(data)
     outlier_indices = list(set(range(len(data))) - set(inlier_indices))
     source_transformed_ransac = model.estimate(data)
 

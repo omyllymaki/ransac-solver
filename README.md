@@ -38,7 +38,7 @@ After that, solver can be initialized with the model and used with the data:
 
 ```
 solver = RansacSolver(model=Model(...), ...)
-inlier_indices = solver.solve(Data(...))
+inlier_indices = solver.fit(Data(...))
 ```
 
 See samples folder for more detailed usage. Run all the samples by typing

@@ -85,7 +85,7 @@ def main():
                           error_threshold=MAX_ERROR,
                           n_sample_points=N_FIT_POINTS)
     time_start = time.time()
-    inlier_indices = solver.solve(data)
+    inlier_indices = solver.fit(data)
     time_end = time.time()
     print(f"Solution took {time_end - time_start} s")
 

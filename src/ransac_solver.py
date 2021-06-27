@@ -35,7 +35,19 @@ class RansacSolver:
         self.n_sample_points = n_sample_points
         self.score_threshold = score_threshold
 
-    def solve(self, data: BaseData) -> np.ndarray:
+    def fit(self, data: BaseData) -> np.ndarray:
+        """
+        Fit model using RANSAC.
+
+        Parameters
+        ----------
+        data : Use-case specific data that is defined by user.
+
+        Returns
+        -------
+        inlier indices
+
+        """
 
         if self.score_threshold is None:
             logger.debug(f"Score threshold is not specified. "

@@ -60,7 +60,7 @@ def main():
                           error_threshold=0.8,
                           n_sample_points=len(data) // 5,
                           max_trials=500)
-    inlier_indices = solver.solve(data)
+    inlier_indices = solver.fit(data)
     print("Test accuracy with some mislabeled data using RANSAC:", calculate_test_accuracy(solver.model.model,
                                                                                            X_test,
                                                                                            y_test))
