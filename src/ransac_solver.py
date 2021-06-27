@@ -24,7 +24,7 @@ class RansacSolver:
                  ):
         """
         @param model: Model that specifies fit and calculate_errors methods.
-        @param error_threshold: Threshold value for errors; if error > threshold, it considered as outlier.
+        @param error_threshold: Threshold value for errors; if error > threshold, it is considered as an outlier.
         @param n_sample_points: Number of points for random sample used to fit model candidate.
         @param max_trials: Max number of trials (iterations)
         @param n_inlier_threshold: Threshold value for number inliers; stop iteration if number of inliers > threshold.
