@@ -36,10 +36,10 @@ def generate_test_data():
 
 def main():
     x, y_true, y = generate_test_data()
-    parameters, _ = curve_fit(func, x, y, maxfev = 2000)
+    parameters, _ = curve_fit(func, x, y, maxfev=2000)
     y_estimate = func(x, *parameters)
 
-    model = Model(fit_function=func)
+    model = Model(fit_function=func, maxfev=2000)
     data = Data(x=x, y=y)
 
     solver = RansacSolver(model=model, error_threshold=0.2, n_sample_points=15, max_trials=500)

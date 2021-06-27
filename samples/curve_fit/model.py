@@ -1,3 +1,5 @@
+from functools import partial
+
 import numpy as np
 from scipy.optimize import curve_fit
 
@@ -10,13 +12,14 @@ class Model(BaseModel):
     Wrapper for scipy curve fit.
     """
 
-    def __init__(self, fit_function):
+    def __init__(self, fit_function , **fit_method_kwargs):
         self.fit_function = fit_function
+        self.curve_fit = partial(curve_fit, f=fit_function, **fit_method_kwargs)
         self.parameters = None
 
     def fit(self, data: Data):
         try:
-            self.parameters, _ = curve_fit(self.fit_function, data.x, data.y)
+            self.parameters, _ = self.curve_fit(xdata=data.x, ydata=data.y)
         except RuntimeError:
             self.parameters = np.array([0, 0, 0])
 
