@@ -1,0 +1,3 @@
+[submodule "samples/icp_fit/icp"]
+	path = samples/icp_fit/icp
+	url = https://github.com/omyllymaki/icp.git
