@@ -5,7 +5,7 @@ basically with any model fitting method to make it robust against outliers.
 
 ## Cloning repo
 
-Clone repo and update submodules:
+Clone repo and update submodules (for samples):
 
 ```
 git clone https://github.com/omyllymaki/ransac-solver.git --recurse-submodules
@@ -16,10 +16,10 @@ git clone https://github.com/omyllymaki/ransac-solver.git --recurse-submodules
 - Python >= 3.6
 - Requirements
 
-Install requirements by running:
+Install requirements by running (also sample dependencies are installed):
 
 ```
-pip3 install -r requirements.txt
+pip3 install -r samples/requirements.txt
 ```
 
 ## Usage
