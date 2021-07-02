@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.common_data_types.data_x import Data
+from src.datas.data_x import Data
 from src.model import BaseModel
 
 

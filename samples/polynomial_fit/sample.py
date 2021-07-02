@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from samples.polynomial_fit.model import Model
-from src.common_data_types.data_xy import Data
+from src.datas.data_xy import Data
 from src.solvers.vanilla_ransac import RansacSolver
 
 logging.basicConfig(level=logging.DEBUG)

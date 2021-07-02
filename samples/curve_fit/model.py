@@ -3,7 +3,7 @@ from functools import partial
 import numpy as np
 from scipy.optimize import curve_fit
 
-from src.common_data_types.data_xy import Data
+from src.datas.data_xy import Data
 from src.model import BaseModel
 
 

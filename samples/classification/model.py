@@ -2,7 +2,7 @@ import numpy as np
 from sklearn import clone
 from sklearn.neighbors import KNeighborsClassifier
 
-from src.common_data_types.data_xy import Data
+from src.datas.data_xy import Data
 from src.model import BaseModel
 
 
