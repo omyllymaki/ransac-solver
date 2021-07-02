@@ -13,14 +13,22 @@ class BaseData(ABC):
     @abstractmethod
     def __getitem__(self, indices: Indices) -> 'BaseData':
         """
-        Get sample points based on indices.
+        Parameters
+        ----------
+        indices : Indices of samples
+
+        Returns
+        -------
+        Data sample based on indices.
         """
         raise NotImplementedError
 
     @abstractmethod
     def __len__(self) -> int:
         """
-        Get number of sample points.
+        Returns
+        -------
+        Number of data points.
         """
         raise NotImplementedError
 

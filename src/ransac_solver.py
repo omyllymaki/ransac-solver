@@ -17,36 +17,39 @@ class RansacSolver:
 
     def __init__(self,
                  model: BaseModel,
-                 error_threshold: float,
                  n_sample_points: int,
+                 error_threshold: float = None,
                  max_trials: int = 100,
-                 score_threshold: float = None
+                 score_threshold: float = None,
                  ):
         """
-        @param model: Model that specifies fit and calculate_errors methods.
-        @param error_threshold: Threshold value for errors; if error > threshold, it is considered as an outlier.
-        @param n_sample_points: Number of points for random sample used to fit model candidate.
-        @param max_trials: Max number of trials (iterations)
-        @param score_threshold: Threshold value for score; stop iteration if score > threshold.
+
+        Parameters
+        ----------
+        model : Model that specifies fit and calculate_errors methods.
+        error_threshold : Threshold value for errors; if error > threshold, it is considered as an outlier.
+        n_sample_points : Number of points for random sample used to fit model candidate.
+        max_trials : Max number of trials (iterations).
+        score_threshold : Threshold value for score; stop iteration if score > threshold.
         """
         self.model = model
-        self.error_threshold = error_threshold
         self.max_trials = max_trials
         self.n_sample_points = n_sample_points
+        self.error_threshold = error_threshold
         self.score_threshold = score_threshold
 
-    def fit(self, data: BaseData) -> np.ndarray:
+    def fit(self, data: BaseData, fit_with_final_inliers=True) -> np.ndarray:
         """
         Fit model using RANSAC.
 
         Parameters
         ----------
         data : Use-case specific data that is defined by user.
+        fit_with_final_inliers: Fit model with final inliers solved by the algorithm.
 
         Returns
         -------
         inlier indices
-
         """
 
         if self.score_threshold is None:
@@ -73,15 +76,15 @@ class RansacSolver:
                 best_score = score
 
                 if best_score >= self.score_threshold:
-                    logger.info(f"Score {best_score} > threshold {self.score_threshold}. End iteration.")
+                    logger.info(f"Score {best_score} >= threshold {self.score_threshold}. End iteration.")
                     break
 
         logger.info(f"Iteration finished. Score: {best_score}")
 
-        # Do final fitting with all the inliers
-        logger.debug(f"Fit model with full inlier dataset.")
-        inliers = data[final_inlier_indices]
-        self.model.fit(inliers)
+        if fit_with_final_inliers:
+            logger.debug(f"Fit model with full inlier dataset.")
+            inliers = data[final_inlier_indices]
+            self.model.fit(inliers)
 
         return final_inlier_indices
 
