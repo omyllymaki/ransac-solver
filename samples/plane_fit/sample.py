@@ -2,7 +2,7 @@ import logging
 
 from samples.plane_fit.model import Model
 from src.common_data_types.data_x import Data
-from src.ransac_solver import RansacSolver
+from src.solvers.vanilla_ransac import RansacSolver
 import time
 
 import matplotlib.pyplot as plt

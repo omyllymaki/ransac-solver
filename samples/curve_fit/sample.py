@@ -7,7 +7,7 @@ import numpy as np
 
 from samples.curve_fit.model import Model
 from src.common_data_types.data_xy import Data
-from src.ransac_solver import RansacSolver
+from src.solvers.vanilla_ransac import RansacSolver
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)

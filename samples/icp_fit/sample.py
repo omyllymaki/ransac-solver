@@ -3,7 +3,7 @@ import logging
 from samples.icp_fit.data import Data
 from samples.icp_fit.icp.icp import icp, transform
 from samples.icp_fit.model import Model
-from src.ransac_solver import RansacSolver
+from src.solvers.vanilla_ransac import RansacSolver
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.spatial.transform import Rotation

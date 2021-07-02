@@ -6,7 +6,7 @@ from sklearn.neighbors import KNeighborsClassifier
 
 from samples.classification.model import Model
 from src.common_data_types.data_xy import Data
-from src.ransac_solver import RansacSolver
+from src.solvers.vanilla_ransac import RansacSolver
 
 logging.basicConfig(level=logging.WARNING)
 logging.getLogger("matplotlib").setLevel(logging.WARNING)

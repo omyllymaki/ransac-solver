@@ -1,42 +1,26 @@
 import logging
-import sys
-
-import numpy as np
+from abc import abstractmethod, ABC
 
 from src.data import BaseData
-from src.model import BaseModel
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
 
-class RansacSolver:
+class BaseRansacSolver(ABC):
     """
     General RANSAC solver. RANSAC is iterative method that can be used to fit model parameters when data contains
     high number of outliers.
+
+    This is abstract base solver class. All the abstract methods need to implemented by inheritor.
     """
-
-    def __init__(self,
-                 model: BaseModel,
-                 n_sample_points: int,
-                 error_threshold: float = None,
-                 max_trials: int = 100,
-                 score_threshold: float = None,
-                 ):
-        """
-
-        Parameters
-        ----------
-        model : Model that specifies fit and calculate_errors methods.
-        error_threshold : Threshold value for errors; if error > threshold, it is considered as an outlier.
-        n_sample_points : Number of points for random sample used to fit model candidate.
-        max_trials : Max number of trials (iterations).
-        score_threshold : Threshold value for score; stop iteration if score > threshold.
-        """
-        self.model = model
-        self.max_trials = max_trials
-        self.n_sample_points = n_sample_points
-        self.error_threshold = error_threshold
-        self.score_threshold = score_threshold
+    model = None
+    data = None
+    inlier_indices_candidate = None
+    inlier_indices = None
+    best_score = None
+    trial_number = None
+    max_trials = None
 
     def fit(self, data: BaseData, fit_with_final_inliers=True) -> np.ndarray:
         """
@@ -45,55 +29,105 @@ class RansacSolver:
         Parameters
         ----------
         data : Use-case specific data that is defined by user.
-        fit_with_final_inliers: Fit model with final inliers solved by the algorithm.
+        fit_with_final_inliers: Fit final model with final inliers solved by the algorithm.
 
         Returns
         -------
         inlier indices
         """
+        self.data = data
+        self.init()
 
-        if self.score_threshold is None:
-            logger.debug(f"Score threshold is not specified. "
-                         f"Set threshold to be equal to number of data points.")
-            self.score_threshold = len(data)
-
-        best_score = 0
-        final_inlier_indices = None
-
-        for trial_number in range(self.max_trials):
-
-            sample = self.sample_data(data)
+        for trial in range(self.max_trials):
+            sample = self.sample_data()
             self.model.fit(sample)
-
-            inlier_indices = self.get_inliers(data)
-            score = self.calculate_score(inlier_indices)
-            logger.debug(f"Trial {trial_number}: score  {score}")
+            self.inlier_indices_candidate = self.get_inliers()
+            is_valid_solution = self.is_solution_valid()
+            if not is_valid_solution:
+                logger.debug(f"Solution is not valid. Do not update inlier indices.")
+                continue
+            score = self.calculate_score()
+            logger.debug(f"Trial {self.trial_number}: score  {score}")
 
             # Update solution if best so far
-            if score > best_score:
+            if score > self.best_score:
                 logger.info(f"Found better solution. Score {score}")
-                final_inlier_indices = inlier_indices
-                best_score = score
+                self.inlier_indices = self.inlier_indices_candidate.copy()
+                self.best_score = score
 
-                if best_score >= self.score_threshold:
-                    logger.info(f"Score {best_score} >= threshold {self.score_threshold}. End iteration.")
+                is_terminated = self.check_termination()
+                if is_terminated:
+                    logger.info(f"Termination criteria filled. End iteration")
                     break
 
-        logger.info(f"Iteration finished. Score: {best_score}")
+        logger.info(f"Iteration finished. Score: {self.best_score}")
 
         if fit_with_final_inliers:
             logger.debug(f"Fit model with full inlier dataset.")
-            inliers = data[final_inlier_indices]
+            inliers = data[self.inlier_indices]
             self.model.fit(inliers)
 
-        return final_inlier_indices
+        return self.inlier_indices
 
-    def sample_data(self, data: BaseData):
-        return data.get_random_sample(self.n_sample_points)
+    def init(self):
+        self.inlier_indices_candidate = None
+        self.inlier_indices = None
+        self.trial_number = 0
+        self.best_score = -np.inf
 
-    def get_inliers(self, data: BaseData):
-        errors = self.model.calculate_errors(data)
-        return np.where(errors < self.error_threshold)[0]
+    def check_termination(self) -> bool:
+        """
+        Check termination criteria.
 
-    def calculate_score(self, inlier_indices: np.ndarray) -> float:
-        return len(inlier_indices)
+        Returns
+        -------
+        boolean indicating if iteration should be terminated.
+        """
+        if len(self.data) == len(self.inlier_indices):
+            return True
+        else:
+            return False
+
+    @abstractmethod
+    def is_solution_valid(self) -> bool:
+        """
+        Check is solution valid.
+
+        Returns
+        -------
+        boolean indicating if solution valid or not.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def sample_data(self) -> BaseData:
+        """
+        Draw sample from full dataset for model fitting.
+
+        Returns
+        -------
+        Data sample.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_inliers(self) -> np.ndarray:
+        """
+        Get inliers, based on the current fitted model.
+
+        Returns
+        -------
+        inlier indices.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def calculate_score(self) -> float:
+        """
+        Calculate score for current solution (inlier candidates). Larger is better.
+
+        Returns
+        -------
+        Score.
+        """
+        raise NotImplementedError
