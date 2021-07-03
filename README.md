@@ -2,6 +2,8 @@
 
 General RANSAC solver using only NumPy as dependency. The implemented RANSAC solver can be used basically with any model fitting method to make it robust against outliers.
 
+https://omyllymaki.medium.com/algorithms-from-scratch-ransac-f5a03bed2fde
+
 ## Cloning repo
 
 Clone repo and update submodules (for samples):
