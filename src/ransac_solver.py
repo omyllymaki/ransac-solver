@@ -39,6 +39,7 @@ class BaseRansacSolver(ABC):
         self.init()
 
         for trial in range(self.max_trials):
+            self.trial_number = trial
             sample = self.sample_data()
             self.model.fit(sample)
             self.inlier_indices_candidate = self.get_inliers()
@@ -75,6 +76,7 @@ class BaseRansacSolver(ABC):
         self.trial_number = 0
         self.best_score = -np.inf
 
+    @abstractmethod
     def check_termination(self) -> bool:
         """
         Check termination criteria.
@@ -83,10 +85,7 @@ class BaseRansacSolver(ABC):
         -------
         boolean indicating if iteration should be terminated.
         """
-        if len(self.data) == len(self.inlier_indices):
-            return True
-        else:
-            return False
+        raise NotImplementedError
 
     @abstractmethod
     def is_solution_valid(self) -> bool:
